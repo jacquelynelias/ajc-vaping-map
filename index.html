@@ -76,11 +76,10 @@
 
         
         //Define the colors in the legend
-        var color1 = 'rgba(240,249,232,1.0)';
-        var color2 = 'rgba(186,228,188,1.0)';
-        var color3 = 'rgba(123,204,196,1.0)';
-        var color4 = 'rgba(67,162,202,1.0)';
-        var color5 = 'rgba(8,104,172,1.0)';
+        var colorArr = ['rgba(240,249,232,1.0)','rgba(186,228,188,1.0)','rgba(123,204,196,1.0)','rgba(67,162,202,1.0)','rgba(8,104,172,1.0)'];
+        //groupings for colors and legend
+        var vioBucketArr = [["0.0", "1.4"], ["1.5", "2.7"], ["2.8", "4.1"], ["4.2", "5.4"], ["5.5", "6.8"]];
+
 
         function pop_ViolationRate_0(feature, layer) {
             var popupContent = 'Over the summer, <div class="emphasis">' + (feature.properties['NAME'] !== null ? Autolinker.link(String(feature.properties['NAME'])) : '') + '</div>\
@@ -92,8 +91,17 @@
         }
 
         function style_ViolationRate_0_0(feature) {
-            if (feature.properties['viol_rate'] >= 0.000000 && feature.properties['viol_rate'] <= 1.360000 ) {
-                return {
+
+          var violRate = +feature.properties['viol_rate'];
+          var color;
+          //use vioBucketArr min and max to determine colors
+          for (var i=0; i<vioBucketArr.length; i++){
+            if(violRate >= +vioBucketArr[i][0] && violRate <= +vioBucketArr[i][1]){
+              color = colorArr[i];
+            }
+          };
+
+          return {
                 pane: 'pane_ViolationRate_0',
                 opacity: 1,
                 color: 'rgba(213,213,213,1.0)',
@@ -103,65 +111,8 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: color1,
-            }
-            }
-            if (feature.properties['viol_rate'] >= 1.360000 && feature.properties['viol_rate'] <= 2.720000 ) {
-                return {
-                pane: 'pane_ViolationRate_0',
-                opacity: 1,
-                color: 'rgba(213,213,213,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: color2,
-            }
-            }
-            if (feature.properties['viol_rate'] >= 2.720000 && feature.properties['viol_rate'] <= 4.080000 ) {
-                return {
-                pane: 'pane_ViolationRate_0',
-                opacity: 1,
-                color: 'rgba(213,213,213,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: color3,
-            }
-            }
-            if (feature.properties['viol_rate'] >= 4.080000 && feature.properties['viol_rate'] <= 5.440000 ) {
-                return {
-                pane: 'pane_ViolationRate_0',
-                opacity: 1,
-                color: 'rgba(213,213,213,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: color4,
-            }
-            }
-            if (feature.properties['viol_rate'] >= 5.440000 && feature.properties['viol_rate'] <= 6.800000 ) {
-                return {
-                pane: 'pane_ViolationRate_0',
-                opacity: 1,
-                color: 'rgba(213,213,213,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1.0, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: color5,
-            }
-            }
+                fillColor: color
+          }
         }
         map.createPane('pane_ViolationRate_0');
         map.getPane('pane_ViolationRate_0').style.zIndex = 400;
@@ -222,7 +173,7 @@
 
         }
 
-        function style_GeorgiaInspections_2_0(feature) {
+        function style_GeorgiaInspections_2_0(feature) { //you could also make this a loop like the colors --EMD
             switch(String(feature.properties['Sale_to_Mi'])) {
                 case 'Yes':
                     return {
@@ -299,7 +250,7 @@
                 butOut.remove(map);
                 butGA.addTo(map);
                 salesLegend.remove(map)
-                legend.addTo(map);
+                //legend.addTo(map);
             }
             if (map.getZoom() >= 6){
                 if (map.hasLayer(layer_GeorgiaInspections_2)){
@@ -344,22 +295,13 @@
             return this._div;
         };
 
-        var legend = L.control({position: 'topleft'});
-
-        legend.onAdd = function (map) {
-
-            var div = L.DomUtil.create('div', 'legend-top legend');
-            // loop through our density intervals and generate a label with a colored square for each interval
-            div.innerHTML += "<div class='key label'>\
-                            <h5>Violation Rate</h5><ul>\
-                            <li><b style='background-color:"+color1+"'></b><label>0.0 to 1.4%</label></li>\
-                            <li><b style='background-color:"+color2+"'></b><label>1.4 to 2.7%</label></li>\
-                            <li><b style='background-color:"+color3+"'></b><label>2.7 to 4.1%</label></li>\
-                            <li><b style='background-color:"+color4+"'></b><label>4.1 to 5.4%</label></li>\
-                            <li><b style='background-color:"+color5+"'></b><label>5.4 to 6.8%</label></li></ul></div>";
-
-            return div;
-        };
+        // loop through our density intervals and generate a label with a colored square for each interval
+        var legendHTML = "<div class='key label'><h5>Violation Rate</h5>";
+        for (var i=0; i<colorArr.length; i++){
+          legendHTML += "<div><b style='background-color:"+colorArr[i]+"'></b><label>"+vioBucketArr[i][0] + " to " + vioBucketArr[i][1] + "%</label></div>"
+        }
+        legendHTML += "</div>";
+        $("#legend").html(legendHTML);
 
         var salesLegend = L.control({position: 'bottomright'});
         salesLegend.onAdd = function (map) {
@@ -389,7 +331,7 @@
 
         method.addTo(map);   
 
-        legend.addTo(map); 
+        //legend.addTo(map); 
         L.control.scale().addTo(map);        
         setBounds();
         </script>
