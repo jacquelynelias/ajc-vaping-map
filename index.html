@@ -19,7 +19,8 @@
         <title>F.D.A. Tobacco Product Inspections</title>
     </head>
     <body>
-        
+        <h1 id='title'>Despite being the <span class='emphasis'>8th most populous state</span>, Georgia ranked <span class='emphasis'>40th</span> in violations for e-cigarette sales to minors over the summer.</h1>
+        <div id="legend"></div>
         <div id="map">  
         </div>
         <script
@@ -342,14 +343,6 @@
             this._div.innerHTML +="<button onclick='zoomOut(map)'>Zoom Out</button>"
             return this._div;
         };
-
-        var title = L.control({position: 'topleft'});
-        title.onAdd = function(map) {
-            var heading = L.DomUtil.create('div', 'container-title')
-            heading.innerHTML += "<h1 id='title'>Despite being the <div class='emphasis'>8th most populous state</div>, Georgia ranked <div class='emphasis'>40th</div> in violations for e-cigarette sales to minors over the summer.</h1>";
-            return heading;
-        };
-        title.addTo(map);
 
         var legend = L.control({position: 'topleft'});
 
