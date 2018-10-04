@@ -9,11 +9,18 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css">
         <link rel="stylesheet" href="css/qgis2web.css">
         <style>
-        html, body, #map {
+        html, body, #map{
             width: 100%;
-            height: 100%;
             padding: 0;
             margin: 0;
+        }
+        #map {
+          height: 550px;
+        }
+        @media only screen and (max-width: 550px){
+          #map {
+            height: 370px;
+          }
         }
         </style>
         <title>F.D.A. Tobacco Product Inspections</title>
@@ -40,8 +47,9 @@
         <script src="data/GeorgiaInterstates_1.js"></script>
         <script src="data/GeorgiaInspections_2.js"></script>
         <script>
+        var winWidth = $(window).width();
         var zoomGA = function(map) {
-            if ( $(window).width() > 500) {      
+            if ( winWidth > 500) {      
                 map.setView([32.989,-82.933],7);
             } else {
                 map.setView([31.985,-83.508],6);
@@ -49,11 +57,11 @@
         }
 
         var zoomOut = function(map) {
-            if ( $(window).width() > 500) {      
-                map.setView([41.35,-100.80],4);
+            if ( winWidth > 500) {
+                map.setView([36.81,-97.80],4);
             } else {
-                map.setView([40.11,-96.33],3);
-            }  
+                map.setView([31.99,-98.38],3);
+            }
             
         }
 
