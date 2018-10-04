@@ -256,10 +256,10 @@ th {
     line-height:20px;
 }
 
-.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+/*.leaflet-popup-content-wrapper, .leaflet-popup-tip {
     background: rgba(255,255,255,0.8);
 
-}
+}*/
 
 .leaflet-control-scale {
     padding-left:10px;
