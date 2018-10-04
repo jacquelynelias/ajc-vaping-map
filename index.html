@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>F.D.A. Tobacco Product Inspections</title>
+    </head>
+    <body>
+        
+        <div id="map">  
+        </div>
+        <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/ViolationRate_0.js"></script>
+        <script src="data/GeorgiaInterstates_1.js"></script>
+        <script src="data/GeorgiaInspections_2.js"></script>
+        <script>
+        var zoomGA = function(map) {
+            if ( $(window).width() > 500) {      
+                map.setView([32.989,-82.933],7);
+            } else {
+                map.setView([31.985,-83.508],6);
+            }  
+        }
+
+        var zoomOut = function(map) {
+            if ( $(window).width() > 500) {      
+                map.setView([41.35,-100.80],4);
+            } else {
+                map.setView([40.11,-96.33],3);
+            }  
+            
+        }
+
+        
+        //Creates the map
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:15, minZoom:2
+        }).fitBounds([[13.4255004769,-108.775085396],[40.4304626026,-81.1646308464]]);
+        var hash = new L.Hash(map);
+        map.scrollWheelZoom.disable();
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        zoomOut(map);
+        //Formats numbers
+        function wCommas(string_) {
+            return string_.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+
+        
+        //Define the colors in the legend
+        var color1 = 'rgba(240,249,232,1.0)';
+        var color2 = 'rgba(186,228,188,1.0)';
+        var color3 = 'rgba(123,204,196,1.0)';
+        var color4 = 'rgba(67,162,202,1.0)';
+        var color5 = 'rgba(8,104,172,1.0)';
+
+        function pop_ViolationRate_0(feature, layer) {
+            var popupContent = 'Over the summer, <div class="emphasis">' + (feature.properties['NAME'] !== null ? Autolinker.link(String(feature.properties['NAME'])) : '') + '</div>\
+                    saw ' + (feature.properties['violations'] !== null ? Autolinker.link(String(feature.properties['violations'])) : '') + ' warning letters\
+                    for selling e-cigarettes to minors out of ' + (feature.properties['inspection'] !== null ? Autolinker.link(wCommas(String(feature.properties['inspection']))) : '') + ' inspections.\
+                    This makes a violation rate of <div class="emphasis">' + (feature.properties['viol_rate'] !== null ? Autolinker.link(String(feature.properties['viol_rate'])) : '') + '%</div>.';
+                
+                layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_ViolationRate_0_0(feature) {
+            if (feature.properties['viol_rate'] >= 0.000000 && feature.properties['viol_rate'] <= 1.360000 ) {
+                return {
+                pane: 'pane_ViolationRate_0',
+                opacity: 1,
+                color: 'rgba(213,213,213,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: color1,
+            }
+            }
+            if (feature.properties['viol_rate'] >= 1.360000 && feature.properties['viol_rate'] <= 2.720000 ) {
+                return {
+                pane: 'pane_ViolationRate_0',
+                opacity: 1,
+                color: 'rgba(213,213,213,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: color2,
+            }
+            }
+            if (feature.properties['viol_rate'] >= 2.720000 && feature.properties['viol_rate'] <= 4.080000 ) {
+                return {
+                pane: 'pane_ViolationRate_0',
+                opacity: 1,
+                color: 'rgba(213,213,213,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: color3,
+            }
+            }
+            if (feature.properties['viol_rate'] >= 4.080000 && feature.properties['viol_rate'] <= 5.440000 ) {
+                return {
+                pane: 'pane_ViolationRate_0',
+                opacity: 1,
+                color: 'rgba(213,213,213,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: color4,
+            }
+            }
+            if (feature.properties['viol_rate'] >= 5.440000 && feature.properties['viol_rate'] <= 6.800000 ) {
+                return {
+                pane: 'pane_ViolationRate_0',
+                opacity: 1,
+                color: 'rgba(213,213,213,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: color5,
+            }
+            }
+        }
+        map.createPane('pane_ViolationRate_0');
+        map.getPane('pane_ViolationRate_0').style.zIndex = 400;
+        map.getPane('pane_ViolationRate_0').style['mix-blend-mode'] = 'normal';
+        var layer_ViolationRate_0 = new L.geoJson(json_ViolationRate_0, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_ViolationRate_0',
+            onEachFeature: pop_ViolationRate_0,
+            style: style_ViolationRate_0_0,
+        });
+        bounds_group.addLayer(layer_ViolationRate_0);
+        map.addLayer(layer_ViolationRate_0);
+        layer_ViolationRate_0.bringToBack();
+        function pop_GeorgiaInterstates_1(feature, layer) {
+        }
+
+        function style_GeorgiaInterstates_1_0() {
+            return {
+                pane: 'pane_GeorgiaInterstates_1',
+                opacity: 1,
+                color: 'rgba(213,213,213,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+            }
+        }
+
+        map.createPane('pane_GeorgiaInterstates_1');
+        map.getPane('pane_GeorgiaInterstates_1').style.zIndex = 401;
+        map.getPane('pane_GeorgiaInterstates_1').style['mix-blend-mode'] = 'normal';
+        var layer_GeorgiaInterstates_1 = new L.geoJson(json_GeorgiaInterstates_1, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_GeorgiaInterstates_1',
+            onEachFeature: pop_GeorgiaInterstates_1,
+            style: style_GeorgiaInterstates_1_0,
+        });
+        bounds_group.addLayer(layer_GeorgiaInterstates_1);
+        function pop_GeorgiaInspections_2(feature, layer) {
+            var offense;
+            if (feature.properties['Sale_to_Mi']==="Yes") {
+                offense = 'A violation was given for a tobacco sale to a minor'
+            } else if (feature.properties['Sale_to_Mi']==="E-cigarette Sale") {
+                offense = 'A violation was given for an e-cigarette sale to a minor'
+            } else {
+                offense = 'The retailer did not sell to a minor'
+            }
+            var popupContent = '<div class="popup-GA"><h4 id="popup-title"><strong>' + (feature.properties['name'] !== null ? Autolinker.link(String(feature.properties['name'])) : '') + '</h4></strong></td>\
+                    <div id="popup-subtitle">' + (feature.properties['addr'] !== null ? Autolinker.link(String(feature.properties['addr'])) : '') + 
+                    ', ' + (feature.properties['city_1'] !== null ? Autolinker.link(String(feature.properties['city_1'])) : '') +
+                    ', ' + (feature.properties['State'] !== null ? Autolinker.link(String(feature.properties['State'])) : '') + '\
+                    ' + (feature.properties['Zip'] !== null ? Autolinker.link(String(feature.properties['Zip'])) : '') + '</div>\
+                    '+(offense) + ' during an inspection \
+                    on ' + (feature.properties['Decision_D'] !== null ? Autolinker.link(String(feature.properties['Decision_D'])) : '') + '.\
+                    </div>';
+            layer.bindPopup(popupContent, {maxHeight: 400, maxWidth:150});
+
+        }
+
+        function style_GeorgiaInspections_2_0(feature) {
+            switch(String(feature.properties['Sale_to_Mi'])) {
+                case 'Yes':
+                    return {
+                pane: 'pane_GeorgiaInspections_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,0.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(8,150,185,0.662745098039)',
+            }
+                    break;
+                case 'No':
+                    return {
+                pane: 'pane_GeorgiaInspections_2',
+                radius: 5.0,
+                opacity: 1,
+                border: '1px solid #fff',
+                color: 'rgba(0,0,0,0.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(78,78,78,0.662745098039)',
+            }
+                    break;
+                case 'E-cigarette Sale':
+                    return {
+                pane: 'pane_GeorgiaInspections_2',
+                radius: 8.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,0.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(185,38,15,0.662745098039)',
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_GeorgiaInspections_2');
+        map.getPane('pane_GeorgiaInspections_2').style.zIndex = 402;
+        map.getPane('pane_GeorgiaInspections_2').style['mix-blend-mode'] = 'normal';
+        var layer_GeorgiaInspections_2 = new L.geoJson(json_GeorgiaInspections_2, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_GeorgiaInspections_2',
+            onEachFeature: pop_GeorgiaInspections_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_GeorgiaInspections_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_GeorgiaInspections_2);
+        map.on('zoomend', function() {
+            if (map.getZoom() <6){
+                if (map.hasLayer(layer_GeorgiaInspections_2)) {
+                    map.removeLayer(layer_GeorgiaInspections_2);
+                } 
+                if (map.hasLayer(layer_GeorgiaInterstates_1)) {
+                    map.removeLayer(layer_GeorgiaInterstates_1);
+                }
+                butOut.remove(map);
+                butGA.addTo(map);
+                salesLegend.remove(map)
+                legend.addTo(map);
+            }
+            if (map.getZoom() >= 6){
+                if (map.hasLayer(layer_GeorgiaInspections_2)){
+                    
+                } else {
+                    map.addLayer(layer_GeorgiaInspections_2); 
+                }
+                if (map.hasLayer(layer_GeorgiaInterstates_1)){
+                    
+                } else {
+                    map.addLayer(layer_GeorgiaInterstates_1);
+                }
+
+                if ($(window).width() <= 500) {
+                    legend.remove(map);
+                }
+                
+                butOut.addTo(map);
+                butGA.remove(map);
+                salesLegend.addTo(map);
+                
+                
+              
+            }
+        });        
+
+        var butGA = new L.Control({position: 'bottomleft'});
+        butGA.onAdd = function(map) {
+            this._div = L.DomUtil.create('div', 'click leaflet-bottom leaflet-left');
+            this._div.innerHTML +="<button onclick='zoomGA(map)'>Zoom to Georgia</button>"
+            return this._div;
+        };
+
+        butGA.addTo(map);
+        var legend = L.control({position: 'topleft'});
+        
+
+        var butOut = new L.Control({position: 'bottomleft'});
+        butOut.onAdd = function(map) {
+            this._div = L.DomUtil.create('div', 'click leaflet-bottom leaflet-left');
+            this._div.innerHTML +="<button onclick='zoomOut(map)'>Zoom Out</button>"
+            return this._div;
+        };
+
+        var title = L.control({position: 'topleft'});
+        title.onAdd = function(map) {
+            var heading = L.DomUtil.create('div', 'container-title')
+            heading.innerHTML += "<h1 id='title'>Despite being the <div class='emphasis'>8th most populous state</div>, Georgia ranked <div class='emphasis'>40th</div> in violations for e-cigarette sales to minors over the summer.</h1>";
+            return heading;
+        };
+        title.addTo(map);
+
+        var legend = L.control({position: 'topleft'});
+
+        legend.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'legend-top legend');
+            // loop through our density intervals and generate a label with a colored square for each interval
+            div.innerHTML += "<div class='key label'>\
+                            <h5>Violation Rate</h5><ul>\
+                            <li><b style='background-color:"+color1+"'></b><label>0.0 to 1.4%</label></li>\
+                            <li><b style='background-color:"+color2+"'></b><label>1.4 to 2.7%</label></li>\
+                            <li><b style='background-color:"+color3+"'></b><label>2.7 to 4.1%</label></li>\
+                            <li><b style='background-color:"+color4+"'></b><label>4.1 to 5.4%</label></li>\
+                            <li><b style='background-color:"+color5+"'></b><label>5.4 to 6.8%</label></li></ul></div>";
+
+            return div;
+        };
+
+        var salesLegend = L.control({position: 'bottomright'});
+        salesLegend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'legend');
+            div.innerHTML += "<div><h5>Minor Sales</h5></div>";
+            div.innerHTML +="<img src='legend/GeorgiaInspections_2_MinorEcigaretteSale2.png'/>E-Cigarette Sale<br />";
+            div.innerHTML +="<img src='legend/GeorgiaInspections_2_MinorTobaccoSale0.png'/>Tobacco Sale<br />";
+            div.innerHTML +="<img style='padding-left:5px; padding-right:15px' src='legend/GeorgiaInspections_2_NoMinorSale1.png'/>No Sale<br />";
+            return div;
+        };
+        var method = L.control({position: 'bottomright'});
+
+        method.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'inf');
+            div.innerHTML += "<span style='display:none' class='pop'>Map by Jacquelyn Elias/AJC | \
+            Source: <a target='_blank' href='https://www.accessdata.fda.gov/scripts/oce/inspections/oce_insp_searching.cfm'> \
+            FDA</a></span><img align='middle' class='info-icon' onClick=expand() src='css/images/baseline-info-24px.svg'/>";
+            return div; 
+        }
+        
+        var expand = function() {
+            $('.pop').toggle();
+        }
+
+
+        
+
+        method.addTo(map);   
+
+        legend.addTo(map); 
+        L.control.scale().addTo(map);        
+        setBounds();
+        </script>
+        <script type="text/javascript" src="//pym.nprapps.org/pym.v1.min.js"></script>
+
+        <script>
+            var pymChild = new pym.Child();
+        </script>        
+    </body>
+</html>
